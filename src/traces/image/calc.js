@@ -15,12 +15,20 @@ module.exports = function calc(gd, trace) {
     var ya = Axes.getFromId(gd, trace.yaxis || 'y');
 
     var x0 = trace.x0 - trace.dx / 2;
+    if(xa && xa.type === 'category') x0 = xa.d2c(trace.x0) - trace.dx / 2;
     var y0 = trace.y0 - trace.dy / 2;
+    if(ya && ya.type === 'category') y0 = ya.d2c(trace.y0) - trace.dy / 2;
     var h = trace.z.length;
     var w = trace.z[0].length;
 
-    trace._extremes[xa._id] = Axes.findExtremes(xa, [x0, x0 + w * trace.dx]);
-    trace._extremes[ya._id] = Axes.findExtremes(ya, [y0, y0 + h * trace.dy]);
+    // Set axis range
+    var i;
+    var xrange = [x0, x0 + w * trace.dx];
+    var yrange = [y0, y0 + h * trace.dy];
+    if(xa && xa.type === 'log') for(i = 0; i < w; i++) xrange.push(x0 + i * trace.dx);
+    if(ya && ya.type === 'log') for(i = 0; i < h; i++) yrange.push(y0 + i * trace.dy);
+    trace._extremes[xa._id] = Axes.findExtremes(xa, xrange);
+    trace._extremes[ya._id] = Axes.findExtremes(ya, yrange);
 
     var cd0 = {
         x0: x0,
