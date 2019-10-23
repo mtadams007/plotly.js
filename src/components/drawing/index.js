@@ -705,7 +705,20 @@ drawing.textPointStyle = function(s, trace, gd, inLegend) {
         if(template) {
             var pt = {};
             appendArrayPointValue(pt, trace, d.i);
-            text = Lib.texttemplateString(text, {}, gd._fullLayout._d3locale, pt, d, trace._meta || {});
+
+            // TODO need to use Axes.hoverLabelText, but
+            // we can't require Axes as this would cause a circular dependency !!
+            var labels = {};
+            if(pt.x && !pt.xLabel) {
+                // TMP !!!
+                labels.xLabel = '! ' + pt.x + ' $$';
+            }
+            if(pt.y && !pt.yLabel) {
+                // TMP !!!
+                labels.yLabel = '! ' + pt.y + ' $$';
+            }
+
+            text = Lib.texttemplateString(text, labels, gd._fullLayout._d3locale, pt, d, trace._meta || {});
         }
 
         var pos = d.tp || trace.textposition;
