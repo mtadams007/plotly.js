@@ -299,7 +299,7 @@ module.exports = {
             ].join(' ')
         },
         bar: extendDeep({}, gaugeBarAttrs, {
-            color: {dflt: 'green'},
+            color: {dflt: colorAttrs.defaults[0]},
             description: [
                 'Set the appearance of the gauge\'s value'
             ].join(' ')
